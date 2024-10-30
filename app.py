@@ -3,8 +3,10 @@ from rembg import remove
 from PIL import Image
 import io
 import os
+from flask_frozen import Freezer  # Import Frozen-Flask
 
 app = Flask(__name__, template_folder='Template')  # Specify the template folder
+freezer = Freezer(app)  # Initialize the Freezer instance
 
 @app.route('/')
 def home():
@@ -28,5 +30,9 @@ def remove_background():
 
     return send_file(img_io, mimetype='image/png')
 
+# Check if the script is running in "freeze" mode
 if __name__ == '__main__':
-    app.run(debug=True)
+    if os.getenv("FREEZE", "false").lower() == "true":
+        freezer.freeze()  # Generate static files for GitHub Pages deployment
+    else:
+        app.run(debug=True)
