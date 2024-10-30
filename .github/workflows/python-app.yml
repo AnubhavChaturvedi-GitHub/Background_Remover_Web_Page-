@@ -1,26 +1,22 @@
 name: Web Build + Deployment to GitHub Pages 
 
 on:
-  # Runs on push to the main or master branches
   push:
     branches: 
       - master
       - main
-  # Runs on pull request events that target one of the below branches
   pull_request:
     branches: 
       - master
       - main
-  # Allows manual trigger from the Actions tab
   workflow_dispatch:
 
-# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
 concurrency:
   group: "pages"
   cancel-in-progress: false
 
 env:
-  PYTHON_VERSION: 3.9  # Use a compatible Python version for Flask and Frozen-Flask
+  PYTHON_VERSION: 3.9
   
 jobs:
   build:
@@ -43,21 +39,21 @@ jobs:
 
     - name: Generate static files with Frozen-Flask
       run: |
-        python app.py  # Assuming `freezer.freeze()` is in app.py and generates files in `build/`
+        python app.py freeze  # Use the freeze argument to generate static files in `build/`
       
     - name: Upload static files for deployment
       uses: actions/upload-pages-artifact@v1
       with:
-        path: ./build  # Directory containing the static files
+        path: ./build
 
   deploy:
-    needs: build  # Run only after the "build" job completes
+    needs: build
 
     runs-on: ubuntu-latest
 
     permissions:
-      pages: write      # Required to deploy to Pages
-      id-token: write   # Needed to verify the deployment source
+      pages: write
+      id-token: write
 
     environment:
       name: github-pages
@@ -72,4 +68,3 @@ jobs:
         uses: actions/deploy-pages@v1
         with:
           artifact_name: page-build-artifact
-
