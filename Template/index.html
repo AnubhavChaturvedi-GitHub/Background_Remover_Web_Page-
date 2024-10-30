@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BG-Remover by NetHyTech</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1d2671, #c33764);
+            color: #fff;
+            text-align: center;
+            overflow: hidden;
+        }
+        h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            text-shadow: 3px 3px 15px rgba(0, 0, 0, 0.4);
+        }
+        p {
+            font-size: 1.2em;
+            max-width: 600px;
+            margin-bottom: 30px;
+            opacity: 0.85;
+        }
+        .file-input {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        input[type="file"] {
+            padding: 10px;
+            margin: 15px 0;
+            cursor: pointer;
+            border-radius: 5px;
+            background-color: #fff;
+            color: #1d2671;
+        }
+        .btn {
+            padding: 12px 30px;
+            font-size: 1.1em;
+            color: #fff;
+            background-color: #c33764;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+        .btn:hover {
+            background-color: #1d2671;
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.3);
+        }
+        .image-container {
+            display: flex;
+            justify-content: space-around;
+            width: 80%;
+            margin-top: 20px;
+            gap: 20px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.4s ease, transform 0.4s ease;
+        }
+        .image-box {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(8px);
+        }
+        .image-box img {
+            max-width: 100%;
+            border-radius: 10px;
+            margin-top: 10px;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+        }
+        #loadingSpinner {
+            display: none;
+            margin-top: 20px;
+        }
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(255, 255, 255, 0.3);
+            border-top: 5px solid #fff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <h1>Remove Background For Free Using NetHyTech Webpage</h1>
+    <p>Our tool instantly removes the background from your images, making them ready for presentations, e-commerce, and social media.</p>
+    
+
+    <div class="file-input">
+        <input type="file" id="fileInput" accept="image/*">
+        <button class="btn" onclick="uploadImage()">Remove Background</button>
+    </div>
+
+    <div id="loadingSpinner">
+        <div class="spinner"></div>
+        <p>Processing...</p>
+    </div>
+
+    <div class="image-container" id="imageContainer">
+        <div class="image-box">
+            <h3>Original Image</h3>
+            <img id="originalImage" alt="Original image">
+        </div>
+        <div class="image-box">
+            <h3>Background Removed</h3>
+            <img id="outputImage" alt="Background removed image" style="display: none;">
+            <a id="downloadBtn" href="#" download="bg-removed.png" style="display: none;" class="btn">Download Image</a>
+        </div>
+    </div>
+
+    <script>
+        function uploadImage() {
+            const fileInput = document.getElementById('fileInput');
+            const originalImage = document.getElementById('originalImage');
+            const outputImage = document.getElementById('outputImage');
+            const downloadBtn = document.getElementById('downloadBtn');
+            const loadingSpinner = document.getElementById('loadingSpinner');
+            const imageContainer = document.getElementById('imageContainer');
+
+            if (fileInput.files.length === 0) {
+                alert("Please select an image file first.");
+                return;
+            }
+
+            // Show loading spinner and hide image container
+            loadingSpinner.style.display = 'block';
+            imageContainer.style.opacity = '0';
+            imageContainer.style.transform = 'translateY(20px)';
+
+            // Display the original image
+            originalImage.src = URL.createObjectURL(fileInput.files[0]);
+            originalImage.style.display = 'block';
+
+            // Prepare the file to send
+            const formData = new FormData();
+            formData.append("file", fileInput.files[0]);
+
+            fetch("/remove_background", {
+                method: "POST",
+                body: formData
+            })
+            .then(response => response.blob())
+            .then(blob => {
+                // Hide loading spinner
+                loadingSpinner.style.display = 'none';
+
+                // Show image container with a fade-in effect
+                imageContainer.style.opacity = '1';
+                imageContainer.style.transform = 'translateY(0)';
+
+                // Display the processed image and update download link
+                outputImage.src = URL.createObjectURL(blob);
+                outputImage.style.display = 'block';
+                downloadBtn.href = outputImage.src;
+                downloadBtn.style.display = 'inline-block';
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                alert("Failed to process the image.");
+                loadingSpinner.style.display = 'none';
+            });
+        }
+    </script>
+</body>
+</html>
