@@ -30,9 +30,4 @@ def remove_background():
 
     return send_file(img_io, mimetype='image/png')
 
-# Check if the script is running in "freeze" mode
-if __name__ == '__main__':
-    if os.getenv("FREEZE", "false").lower() == "true":
-        freezer.freeze()  # Generate static files for GitHub Pages deployment
-    else:
-        app.run(debug=True)
+
