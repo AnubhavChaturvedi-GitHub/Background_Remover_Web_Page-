@@ -2,6 +2,8 @@
 
 Welcome to **NetHyTech Background Remover**! This project is an AI-powered, web-based tool that instantly removes backgrounds from images, providing professional-quality results for various applications, including e-commerce, presentations, and social media.
 
+![NetHyTech Background Remover Interface](https://via.placeholder.com/800x400?text=Screenshot+Placeholder)
+
 ### Table of Contents
 - [Features](#features)
 - [Tech Stack](#tech-stack)
@@ -27,12 +29,6 @@ Welcome to **NetHyTech Background Remover**! This project is an AI-powered, web-
 - **Backend**: Python, Flask (for local development and testing)
 - **Static Generation**: Frozen-Flask (converts Flask app to static files)
 - **Deployment**: GitHub Pages via GitHub Actions
-
----
-
-## Screenshots
-
-![NetHyTech Background Remover Interface](https://via.placeholder.com/800x400?text=Screenshot+Placeholder)
 
 ---
 
