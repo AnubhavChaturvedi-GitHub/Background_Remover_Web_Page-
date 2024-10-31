@@ -70,8 +70,6 @@ python app.py
 
 This will start the app locally at `http://127.0.0.1:5000`.
 
-> **Note**: The app includes an automated script (`freezer.freeze()`) to generate static HTML files for deployment. For testing locally, you may skip this step until you’re ready to deploy.
-
 ---
 ## License
 
